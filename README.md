@@ -35,18 +35,13 @@ For Ghasedak panel you should config these in .env
 NOTIFICATION_DRIVER="ghasedak"
 GHASEDAK_API_KEY=""
 GHASEDAK_SENDER=""
-
 ```
+For Kavenegar panel you should config these in .env
 ```
 NOTIFICATION_DRIVER="kavenegar"
 KAVENEGAR_SENDER=""
 KAVENEGAR_API_KEY=""
 ```
-
-
-For Kavenegar panel you should config these in .env
-
-
 
 ## API Reference
 
