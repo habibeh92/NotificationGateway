@@ -1,0 +1,63 @@
+version: "3.9"
+services:
+    app:
+        build:
+            args:
+                user: challenger
+                uid: 1000
+            context: ./
+            dockerfile: Dockerfile
+        image: notifications
+        container_name: notifications-app
+        restart: unless-stopped
+        working_dir: /var/www/
+        environment:
+            - DB_HOST=notifications-db
+            - DB_DATABASE=notifications_challenge
+            - DB_USERNAME=challenger
+            - DB_PASSWORD=secret
+            - RABBITMQ_HOST=notifications-rabbitmq
+        depends_on:
+            - db
+            - nginx
+            - rabbitmq
+        volumes:
+            - ./:/var/www
+        networks:
+            - notifications
+    db:
+        image: mysql:8.0
+        container_name: notifications-db
+        restart: unless-stopped
+        environment:
+            MYSQL_DATABASE: notifications_challenge
+            MYSQL_ROOT_PASSWORD: secret
+            MYSQL_PASSWORD: secret
+            MYSQL_USER: challenger
+            SERVICE_TAGS: dev
+            SERVICE_NAME: mysql
+        networks:
+            - notifications
+    nginx:
+        image: nginx:alpine
+        container_name: notifications-nginx
+        restart: unless-stopped
+        ports:
+            - 8000:80
+        volumes:
+            - ./:/var/www
+            - ./docker-compose/nginx:/etc/nginx/conf.d/
+        networks:
+            - notifications
+
+    rabbitmq:
+        container_name: notifications-rabbitmq
+        image: rabbitmq:3.8-management-alpine
+        environment:
+            - RABBITMQ_DEFAULT_USER=guest
+            - RABBITMQ_DEFAULT_PASS=guest
+        networks:
+            - notifications
+networks:
+    notifications:
+        driver: bridge
