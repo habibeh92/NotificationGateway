@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Entities\AnonymousUser;
 use App\Exceptions\NotificationDriverNotFound;
 use App\Exceptions\NotificationSendingFailed;
+use App\Http\Requests\NotificationReportRequest;
 use App\Http\Requests\NotificationSendRequest;
 use App\Interfaces\NotificationRepositoryInterface;
 use App\Notifications\DynamicMessage;
@@ -60,11 +61,11 @@ class NotificationsController extends Controller
     /**
      * the report of notifications
      *
-     * @param NotificationSendRequest $request
+     * @param NotificationReportRequest $request
      *
      * @return JsonResponse
      */
-    public function report(NotificationSendRequest $request)
+    public function report(NotificationReportRequest $request)
     {
         $data = $this->notificationRepository->report($request->receptor, $request->driver);
 
